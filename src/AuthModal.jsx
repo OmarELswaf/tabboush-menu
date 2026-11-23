@@ -42,4 +42,4 @@ export default function AuthModal({ onClose, onDone }) {
       </div>
     </div>
   );
-          }
+}
