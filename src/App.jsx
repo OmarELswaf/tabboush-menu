@@ -70,4 +70,4 @@ export default function App() {
       {showAuth && <AuthModal onClose={() => setShowAuth(false)} onDone={(u) => { setShowAuth(false); setUser(u); }} />}
     </div>
   );
-    }
+}
