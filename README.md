@@ -86,4 +86,4 @@ deployment should host the restaurant's own photos.
 
 البيانات محفوظة في MongoDB Atlas (خطة مجانية M0) — تعديلات لوحة التحكم تُحفظ بشكل دائم.
 
-بالنسبة للنشر على Vercel لازم تضيف `MONGODB_URI` و `SEED_KEY` كـ Secrets في إعدادات المشروع قبل أول Seed.
+بالنسبة للنشر على Vercel لازم تضيف `MONGODB_URI` و `JWT_SECRET` و `SEED_KEY` كـ Secrets في إعدادات المشروع قبل أول Seed.
