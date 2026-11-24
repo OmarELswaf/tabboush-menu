@@ -1,5 +1,5 @@
 import { Restaurant } from "../_lib/models.js";
-import { authAdmin, send } from "../_lib/auth.js";
+import { authAdmin, isPublicDemo, DEMO_READONLY_MSG, send } from "../_lib/auth.js";
 
 // GET   /api/admin/restaurant — the caller's tenant settings (admin)
 // PATCH /api/admin/restaurant — update settings (admin)
@@ -19,6 +19,7 @@ export default async function handler(req, res) {
     }
 
     if (req.method === "PATCH") {
+      if (isPublicDemo(r)) return send(res, 403, { error: DEMO_READONLY_MSG });
       const { name, tagline, area, whatsappNumber, logoUrl, theme } = req.body || {};
       if (name !== undefined) r.name = String(name).trim() || r.name;
       if (tagline !== undefined) r.tagline = String(tagline);

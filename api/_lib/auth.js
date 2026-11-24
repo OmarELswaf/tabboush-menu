@@ -49,3 +49,9 @@ export function send(res, status, body) {
   res.status(status).setHeader("Content-Type", "application/json");
   res.send(JSON.stringify(body));
 }
+
+// The public demo tenant is view-only: visitors can tour the admin panel
+// but writes are blocked so the shared sample menu stays intact.
+export const PUBLIC_DEMO_SLUG = "tabboush";
+export const isPublicDemo = (r) => !!r && r.slug === PUBLIC_DEMO_SLUG;
+export const DEMO_READONLY_MSG = "دي نسخة عرض للمشاهدة بس — التعديل مقفول في الديمو.";

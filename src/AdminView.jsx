@@ -213,7 +213,7 @@ export default function AdminView() {
 
   return (
     <div className="app admin-app">
-      <div className="demo-ribbon">لوحة تحكم تجريبية — بيانات للعرض فقط</div>
+      <div className="demo-ribbon">لوحة تحكم تجريبية — بيانات للعرض فقط (التعديل مقفول)</div>
       <div className="page">
         <div className="admin-top">
           <h2>لوحة تحكم المطعم</h2>

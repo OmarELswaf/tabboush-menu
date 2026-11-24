@@ -1,4 +1,4 @@
-import { authAdmin, send } from "../_lib/auth.js";
+import { authAdmin, isPublicDemo, DEMO_READONLY_MSG, send } from "../_lib/auth.js";
 
 // PUT /api/admin/menu { categories, items } — replace the tenant's whole menu (admin).
 // One save action keeps the editor simple: the panel edits locally then saves.
@@ -7,6 +7,7 @@ export default async function handler(req, res) {
   try {
     const r = await authAdmin(req);
     if (!r) return send(res, 401, { error: "سجّل دخول كإدارة الأول" });
+    if (isPublicDemo(r)) return send(res, 403, { error: DEMO_READONLY_MSG });
     const { categories, items } = req.body || {};
     if (!Array.isArray(categories) || !Array.isArray(items)) return send(res, 400, { error: "بيانات المنيو ناقصة" });
     r.categories = categories.map((c) => String(c).trim()).filter(Boolean).slice(0, 30);

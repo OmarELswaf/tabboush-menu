@@ -12,31 +12,7 @@ const FEATURES = [
 const STEPS = [
   { n: "١", title: "ابعتلنا منيوك", desc: "صور المنيو الحالي أو ابعت الأصناف والأسعار واتساب، واحنا نجهزهولك." },
   { n: "٢", title: "راجع وعدّل", desc: "تدخل لوحة التحكم وتجرّب بنفسك: غيّر سعر، ضيف صنف، بدّل الألوان." },
-  { n: "٣", title: "اطبع الكود واشتغل", desc: "تستلم كود QR جاهز للطباعة على الترابيزات، والمنيو شغال من أول يوم." },
-];
-
-const PLANS = [
-  {
-    name: "تأسيس",
-    price: "٩٩٠",
-    period: "مرة واحدة",
-    points: ["تجهيز المنيو كامل بأصنافك وصورك", "لوجو وألوان المطعم", "كود QR جاهز للطباعة", "تدريب سريع على لوحة التحكم"],
-    highlight: false,
-  },
-  {
-    name: "شهري",
-    price: "١٤٩",
-    period: "ج.م / شهر",
-    points: ["استضافة وتشغيل المنيو", "طلبات واتساب + متابعة الطلبات", "تعديلات غير محدودة من لوحة التحكم", "دعم فني على واتساب"],
-    highlight: true,
-  },
-  {
-    name: "سنوي",
-    price: "١٤٩٠",
-    period: "ج.م / سنة",
-    points: ["كل مميزات الباقة الشهرية", "شهرين هدية", "أولوية في الدعم والتعديلات الكبيرة"],
-    highlight: false,
-  },
+  { n: "٣", title: "اطبع الكود واشتغل", desc: "تستلم كود QR جاهز للطباعة على الترابيزات، وتعدّل منيوك من لوحة التحكم في أي وقت." },
 ];
 
 export default function Landing() {
@@ -44,7 +20,7 @@ export default function Landing() {
     <div className="landing">
       <header className="l-hero">
         <p className="l-kicker">تبّوش — منيو رقمي للمطاعم والكافيهات</p>
-        <h1>منيو QR لمطعمك<br />شغال في يوم واحد</h1>
+        <h1>منيو QR لمطعمك<br />على موبايل عميلك</h1>
         <p className="l-sub">
           عميلك يصوّر الكود، يشوف المنيو بالصور والأسعار، ويطلب على واتساب مباشرة.
           وإنت تعدّل أي حاجة من لوحة تحكم سهلة، من غير مبرمج.
@@ -83,19 +59,10 @@ export default function Landing() {
       </section>
 
       <section className="l-section">
-        <h2>الأسعار</h2>
-        <p className="l-note center">أسعار واضحة من غير مفاجآت. تقدر توقف الاشتراك في أي وقت.</p>
-        <div className="l-plans">
-          {PLANS.map((p) => (
-            <div className={p.highlight ? "l-plan highlight" : "l-plan"} key={p.name}>
-              {p.highlight && <span className="l-plan-badge">الأكثر اختيارًا</span>}
-              <h3>{p.name}</h3>
-              <p className="l-price"><strong>{p.price}</strong> <span>{p.period}</span></p>
-              <ul>
-                {p.points.map((pt) => <li key={pt}>{pt}</li>)}
-              </ul>
-            </div>
-          ))}
+        <h2>التسعير</h2>
+        <p className="l-note center">السعر بيتحدد حسب حجم المنيو وعدد الفروع واحتياجك. كلمنا ونبعتلك عرض سعر واضح لمطعمك قبل ما تدفع أي حاجة.</p>
+        <div className="l-cta-row">
+          <a className="l-cta primary" href="mailto:alsawaf.3mor@gmail.com?subject=تسعير%20منيو%20QR">اطلب عرض سعر</a>
         </div>
       </section>
 
