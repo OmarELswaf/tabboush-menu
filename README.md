@@ -81,3 +81,7 @@ later upgrade, not part of this demo.
 
 All food photos are from [Unsplash](https://unsplash.com) (hotlinked). A real
 deployment should host the restaurant's own photos.
+
+## التخزين
+
+البيانات محفوظة في MongoDB Atlas (خطة مجانية M0) — تعديلات لوحة التحكم تُحفظ بشكل دائم.
