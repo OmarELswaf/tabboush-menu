@@ -81,3 +81,11 @@ later upgrade, not part of this demo.
 
 All food photos are from [Unsplash](https://unsplash.com) (hotlinked). A real
 deployment should host the restaurant's own photos.
+
+## التخزين
+
+البيانات محفوظة في MongoDB Atlas (خطة مجانية M0) — تعديلات لوحة التحكم تُحفظ بشكل دائم.
+
+بالنسبة للنشر على Vercel لازم تضيف `MONGODB_URI` و `JWT_SECRET` و `SEED_KEY` كـ Secrets في إعدادات المشروع قبل أول Seed.
+
+ملاحظة: لوحة تحكم مطعم الديمو (tabboush) للمشاهدة فقط — التعديلات عليها محظورة من الـ API حتى تفضل بيانات العرض ثابتة.
