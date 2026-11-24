@@ -18,6 +18,7 @@ const menuItemSchema = new mongoose.Schema(
     price: Number,
     img: { type: String, default: "" },
     tag: { type: String, default: "" },
+    flags: { type: [String], default: [] },
   },
   { _id: false }
 );
@@ -28,6 +29,7 @@ const restaurantSchema = new mongoose.Schema(
     name: { type: String, required: true },
     tagline: { type: String, default: "" },
     area: { type: String, default: "" },
+    hours: { type: String, default: "" },
     whatsappNumber: { type: String, default: "" },
     logoUrl: { type: String, default: "" },
     theme: {

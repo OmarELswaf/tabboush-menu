@@ -22,7 +22,11 @@ function IconBasket() {
 
 export default function MenuView({ tenant, user, onAuth, live }) {
   const [activeCat, setActiveCat] = useState(tenant.categories[0]);
-  const [cart, setCart] = useState({});
+  const [search, setSearch] = useState("");
+  const [detail, setDetail] = useState(null);
+  const [cart, setCart] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(`tabboush:cart:${tenant.slug}`)) || {}; } catch { return {}; }
+  });
   const [drawer, setDrawer] = useState(false);
   const [form, setForm] = useState({ phone: "", type: "استلام من الفرع", notes: "" });
   const [placing, setPlacing] = useState(false);
@@ -36,7 +40,17 @@ export default function MenuView({ tenant, user, onAuth, live }) {
   );
   const total = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
   const count = cartItems.reduce((s, i) => s + i.qty, 0);
-  const add = (id, d) => setCart((c) => ({ ...c, [id]: Math.max(0, (c[id] || 0) + d) }));
+  const add = (id, d) => setCart((c) => {
+    const next = { ...c, [id]: Math.max(0, (c[id] || 0) + d) };
+    try { localStorage.setItem(`tabboush:cart:${tenant.slug}`, JSON.stringify(next)); } catch { /* private mode */ }
+    return next;
+  });
+
+  const norm = (s) => (s || "").replace(/[أإآ]/g, "ا").replace(/ة/g, "ه").trim();
+  const q = norm(search);
+  const visibleItems = q
+    ? tenant.items.filter((i) => norm(i.name).includes(q) || norm(i.desc).includes(q))
+    : tenant.items.filter((i) => i.cat === activeCat);
 
   const orderLines = () => [
     `طلب جديد من منيو ${tenant.name}`,
@@ -75,6 +89,7 @@ export default function MenuView({ tenant, user, onAuth, live }) {
   const closeAfterOrder = () => {
     setPlaced(null);
     setCart({});
+    try { localStorage.removeItem(`tabboush:cart:${tenant.slug}`); } catch { /* ignore */ }
     setDrawer(false);
   };
 
@@ -87,8 +102,19 @@ export default function MenuView({ tenant, user, onAuth, live }) {
         </div>
         <h1>{tenant.tagline || "أهلاً بيكم"}</h1>
         {tenant.area && <p className="hero-loc">{tenant.area}</p>}
+        {tenant.hours && <p className="hero-hours"><span className="dot" /> {tenant.hours}</p>}
         <a className="hero-cta" href="#menu">استعرض المنيو</a>
       </header>
+
+      <div className="searchbar">
+        <input
+          type="search"
+          placeholder="دوّر في المنيو… كفتة، بروست، ميلك شيك"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          aria-label="بحث في المنيو"
+        />
+      </div>
 
       <nav className="chips" id="menu">
         {tenant.categories.map((c) => (
@@ -97,17 +123,24 @@ export default function MenuView({ tenant, user, onAuth, live }) {
       </nav>
 
       <main className="menu">
-        {tenant.items.filter((i) => i.cat === activeCat).map((item) => (
-          <article className="card" key={item.id}>
+        {visibleItems.length === 0 && <p className="empty-note">مفيش أصناف مطابقة للبحث.</p>}
+        {visibleItems.map((item) => (
+          <article className="card" key={item.id} onClick={() => setDetail(item)}>
             {item.img && <img src={item.img} alt={item.name} loading="lazy" />}
             <div className="card-body">
               <div className="card-head">
                 <h3>{item.name}</h3>
                 {item.tag && <span className="tag">{item.tag}</span>}
               </div>
+              {item.flags?.length > 0 && (
+                <div className="badges">
+                  {item.flags.map((f) => <span className="badge" key={f}>{f}</span>)}
+                </div>
+              )}
               {item.desc && <p className="desc">{item.desc}</p>}
               <div className="card-foot">
                 <span className="price">{egp(item.price)}</span>
+                <span onClick={(e) => e.stopPropagation()}>
                 {cart[item.id] ? (
                   <div className="qty">
                     <button aria-label="زيادة" onClick={() => add(item.id, 1)}><IconPlus /></button>
@@ -117,11 +150,43 @@ export default function MenuView({ tenant, user, onAuth, live }) {
                 ) : (
                   <button className="add-btn" onClick={() => add(item.id, 1)}><IconPlus /> أضف</button>
                 )}
+                </span>
               </div>
             </div>
           </article>
         ))}
       </main>
+
+      {detail && (
+        <div className="overlay" onClick={() => setDetail(null)}>
+          <div className="sheet" onClick={(e) => e.stopPropagation()}>
+            {detail.img && <img className="sheet-img" src={detail.img.replace("w=600", "w=1000")} alt={detail.name} />}
+            <div className="sheet-body">
+              <div className="sheet-head">
+                <h2>{detail.name}</h2>
+                <button className="icon-btn" aria-label="إغلاق" onClick={() => setDetail(null)}><IconClose /></button>
+              </div>
+              <div className="badges">
+                {detail.tag && <span className="tag">{detail.tag}</span>}
+                {detail.flags?.map((f) => <span className="badge" key={f}>{f}</span>)}
+              </div>
+              {detail.desc && <p className="desc">{detail.desc}</p>}
+              <div className="sheet-foot">
+                <span className="price">{egp(detail.price)}</span>
+                {cart[detail.id] ? (
+                  <div className="qty">
+                    <button aria-label="زيادة" onClick={() => add(detail.id, 1)}><IconPlus /></button>
+                    <span>{cart[detail.id]}</span>
+                    <button aria-label="تقليل" onClick={() => add(detail.id, -1)}><IconMinus /></button>
+                  </div>
+                ) : (
+                  <button className="add-btn" onClick={() => { add(detail.id, 1); setDetail(null); }}><IconPlus /> أضف للطلب</button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {count > 0 && !placed && (
         <button className="cart-bar" onClick={() => setDrawer(true)}>

@@ -5,15 +5,13 @@ import MenuView from "./MenuView";
 import MyOrders from "./MyOrders";
 import AuthModal from "./AuthModal";
 import AdminView from "./AdminView";
+import Landing from "./Landing";
 
 function useSlug() {
   const path = window.location.pathname;
   const m = path.match(/^\/r\/([a-z0-9-]+)/);
   if (m) return m[1];
-  if (path !== "/") return DEFAULT_TENANT.slug;
-  // Root redirects to the sample tenant so the URL is always shareable.
-  window.history.replaceState(null, "", `/r/${DEFAULT_TENANT.slug}`);
-  return DEFAULT_TENANT.slug;
+  return null; // Root shows the product landing page.
 }
 
 export default function App() {
@@ -26,13 +24,14 @@ export default function App() {
   const [showAuth, setShowAuth] = useState(false);
 
   useEffect(() => {
-    if (isAdmin) return;
+    if (isAdmin || !slug) return;
     api.restaurant(slug)
       .then((d) => { setTenant(d.restaurant); setLive(true); })
       .catch(() => { setTenant(DEFAULT_TENANT); setLive(false); });
   }, [slug, isAdmin]);
 
   if (isAdmin) return <AdminView />;
+  if (!slug) return <Landing />;
 
   if (!tenant) {
     return <div className="app loading"><div className="demo-ribbon">منيو تجريبي — بيانات وأسعار للعرض فقط</div><p className="loading-text">بتحميل المنيو...</p></div>;
